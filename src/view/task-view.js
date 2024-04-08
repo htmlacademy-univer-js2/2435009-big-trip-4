@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {humanizeTaskDueDate, isTaskExpired, isTaskRepeating} from '../presenter/utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizeTaskDueDate, isTaskExpired, isTaskRepeating} from '../utils/task.js';
 
 function createTaskTemplate(task) {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
@@ -66,24 +66,25 @@ function createTaskTemplate(task) {
   );
 }
 
-export default class TaskView {
-  constructor({task}) {
-    this.task = task;
+export default class TaskView extends AbstractView {
+  #task = null;
+  #handleEditClick = null;
+
+  constructor({task, onEditClick}) {
+    super();
+    this.#task = task;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.card__btn--edit')
+      .addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createTaskTemplate(this.task);
+  get template() {
+    return createTaskTemplate(this.#task);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

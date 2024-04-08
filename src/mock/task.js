@@ -1,5 +1,5 @@
-import {getRandomArrayElement} from '../presenter/utils.js';
 import {COLORS} from '../const.js';
+import {getRandomArrayElement} from '../utils/common.js';
 
 const mockTasks = [
   {
