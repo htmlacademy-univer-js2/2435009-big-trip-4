@@ -10,3 +10,4 @@ function generateFilter(tasks) {
 }
 
 export {generateFilter};
+
