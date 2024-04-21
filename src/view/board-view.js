@@ -1,4 +1,4 @@
-import AbstractView from '../abstract-stateful-view.js';
+import AbstractView from '../framework/view/abstract-stateful-view.js';
 
 function createBoardTemplate() {
   return '<section class="board container"></section>';
