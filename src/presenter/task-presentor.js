@@ -70,6 +70,7 @@ export default class TaskPresenter {
     }
   }
 
+
   #replaceCardToForm() {
     replace(this.#taskEditComponent, this.#taskComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
