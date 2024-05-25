@@ -35,6 +35,7 @@ function getWeightForNullDate(dateA, dateB) {
   return null;
 }
 
+
 function sortTaskUp(taskA, taskB) {
   const weight = getWeightForNullDate(taskA.dueDate, taskB.dueDate);
 
