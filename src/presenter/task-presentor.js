@@ -7,14 +7,13 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-
 export default class TaskPresenter {
   #taskListContainer = null;
   #handleDataChange = null;
+  #handleModeChange = null;
 
   #taskComponent = null;
   #taskEditComponent = null;
-  #handleModeChange = null;
 
   #task = null;
   #mode = Mode.DEFAULT;
@@ -27,8 +26,10 @@ export default class TaskPresenter {
 
   init(task) {
     this.#task = task;
+
     const prevTaskComponent = this.#taskComponent;
     const prevTaskEditComponent = this.#taskEditComponent;
+
     this.#taskComponent = new TaskView({
       task: this.#task,
       onEditClick: this.#handleEditClick,
@@ -45,8 +46,6 @@ export default class TaskPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#taskComponent, prevTaskComponent);
     }
@@ -69,7 +68,6 @@ export default class TaskPresenter {
       this.#replaceFormToCard();
     }
   }
-
 
   #replaceCardToForm() {
     replace(this.#taskEditComponent, this.#taskComponent);
