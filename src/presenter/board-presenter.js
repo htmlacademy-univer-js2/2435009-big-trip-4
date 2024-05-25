@@ -4,6 +4,7 @@ import TaskListView from '../view/task-list-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import {render, RenderPosition, remove} from '../framework/render.js';
 import NoTaskView from '../view/no-task-view.js';
+import LoadingView from '../view/loading-view.js';
 import TaskPresenter from './task-presenter.js';
 import NewTaskPresenter from './new-task-presenter.js';
 import {sortTaskUp, sortTaskDown} from '../utils/task.js';
@@ -19,6 +20,7 @@ export default class BoardPresenter {
 
   #boardComponent = new BoardView();
   #taskListComponent = new TaskListView();
+  #loadingComponent = new LoadingView();
   #loadMoreButtonComponent = null;
   #sortComponent = null;
   #noTaskComponent = null;
@@ -28,6 +30,7 @@ export default class BoardPresenter {
   #newTaskPresenter = null;
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL;
+  #isLoading = true;
 
   constructor({boardContainer, tasksModel, filterModel, onNewTaskDestroy}) {
     this.#boardContainer = boardContainer;
@@ -112,6 +115,11 @@ export default class BoardPresenter {
         this.#clearBoard({resetRenderedTaskCount: true, resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
     }
   };
 
@@ -147,6 +155,10 @@ export default class BoardPresenter {
     tasks.forEach((task) => this.#renderTask(task));
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
   #renderNoTasks() {
     this.#noTaskComponent = new NoTaskView({
       filterType: this.#filterType
@@ -171,6 +183,7 @@ export default class BoardPresenter {
     this.#taskPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     remove(this.#loadMoreButtonComponent);
 
     if (this.#noTaskComponent) {
@@ -193,6 +206,11 @@ export default class BoardPresenter {
 
   #renderBoard() {
     render(this.#boardComponent, this.#boardContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
     const tasks = this.tasks;
     const taskCount = tasks.length;
