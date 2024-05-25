@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate, isTaskExpired, isTaskRepeating} from '../utils/task.js';
 
@@ -47,7 +48,7 @@ function createTaskTemplate(task) {
             </svg>
           </div>
           <div class="card__textarea-wrap">
-            <p class="card__text">${description}</p>
+            <p class="card__text">${he.encode(description)}</p>
           </div>
           <div class="card__settings">
             <div class="card__details">
