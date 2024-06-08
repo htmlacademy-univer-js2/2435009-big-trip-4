@@ -3,6 +3,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {COLORS} from '../const.js';
 import {humanizeTaskDueDate, isTaskRepeating} from '../utils/task.js';
 import flatpickr from 'flatpickr';
+
 import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_TASK = {
@@ -27,6 +28,7 @@ function createTaskEditDateTemplate(dueDate, isDueDate, isDisabled) {
     `<button class="card__date-deadline-toggle" type="button" ${isDisabled ? 'disabled' : ''}>
       date: <span class="card__date-status">${isDueDate ? 'yes' : 'no'}</span>
     </button>
+
     ${isDueDate ? `<fieldset class="card__date-deadline">
       <label class="card__input-deadline-wrap">
         <input
@@ -48,6 +50,7 @@ function createTaskEditRepeatingTemplate(repeating, isRepeating, isDisabled) {
     `<button class="card__repeat-toggle" type="button"${isDisabled ? 'disabled' : ''}>
       repeat:<span class="card__repeat-status">${isRepeating ? 'yes' : 'no'}</span>
     </button>
+
   ${isRepeating ? `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
       ${Object.entries(repeating).map(([day, repeat]) => `<input
@@ -118,16 +121,19 @@ function createTaskEditTemplate(data) {
               <use xlink:href="#wave"></use>
             </svg>
           </div>
+
           <div class="card__textarea-wrap">
             <label>
               <textarea
                 class="card__text"
                 placeholder="Start typing your text here..."
+                
                 name="text"
                 ${isDisabled ? 'disabled' : ''}
                 >${he.encode(description)}</textarea>
             </label>
           </div>
+
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
@@ -136,6 +142,7 @@ function createTaskEditTemplate(data) {
               ${repeatingTemplate}
               </div>
             </div>
+
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
@@ -143,6 +150,7 @@ function createTaskEditTemplate(data) {
               </div>
             </div>
           </div>
+
           <div class="card__status-btns">
           <button class="card__save" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>
             ${isSaving ? 'saving...' : 'save'}
@@ -174,8 +182,6 @@ export default class TaskEditView extends AbstractStatefulView {
     return createTaskEditTemplate(this._state);
   }
 
-  // Перегружаем метод родителя removeElement,
-  // чтобы при удалении удалялся более не нужный календарь
   removeElement() {
     super.removeElement();
 
@@ -237,9 +243,6 @@ export default class TaskEditView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       isDueDate: !this._state.isDueDate,
-      // Логика следующая: если выбор даты нужно показать,
-      // то есть когда "!this._state.isDueDate === true",
-      // тогда isRepeating должно быть строго false.
       isRepeating: !this._state.isDueDate ? false : this._state.isRepeating,
     });
   };
@@ -253,7 +256,6 @@ export default class TaskEditView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       isRepeating: !this._state.isRepeating,
-      // Аналогично, но наоборот, для повторения
       isDueDate: !this._state.isRepeating ? false : this._state.isDueDate,
     });
   };
@@ -267,14 +269,12 @@ export default class TaskEditView extends AbstractStatefulView {
 
   #setDatepicker() {
     if (this._state.isDueDate) {
-      // flatpickr есть смысл инициализировать только в случае,
-      // если поле выбора даты доступно для заполнения
       this.#datepicker = flatpickr(
         this.element.querySelector('.card__date'),
         {
           dateFormat: 'j F',
           defaultDate: this._state.dueDate,
-          onChange: this.#dueDateChangeHandler, // На событие flatpickr передаём наш колбэк
+          onChange: this.#dueDateChangeHandler,
         },
       );
     }

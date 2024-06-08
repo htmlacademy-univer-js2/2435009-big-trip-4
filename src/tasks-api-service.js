@@ -56,7 +56,6 @@ export default class TasksApiService extends ApiService {
       'repeating_days': task.repeating,
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedTask.dueDate;
     delete adaptedTask.isArchive;
     delete adaptedTask.isFavorite;

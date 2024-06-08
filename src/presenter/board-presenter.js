@@ -45,13 +45,18 @@ export default class BoardPresenter {
     this.#boardContainer = boardContainer;
     this.#tasksModel = tasksModel;
     this.#filterModel = filterModel;
+
     this.#newTaskPresenter = new NewTaskPresenter({
-      taskListContainer: this.#taskListComponent.element,
+      taskListContainer:
+    this.#taskListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewTaskDestroy
     });
 
+
     this.#tasksModel.addObserver(this.#handleModelEvent);
+
+
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
@@ -66,6 +71,7 @@ export default class BoardPresenter {
       case SortType.DATE_DOWN:
         return filteredTasks.sort(sortTaskDown);
     }
+
     return filteredTasks;
   }
 
@@ -220,9 +226,6 @@ export default class BoardPresenter {
     if (resetRenderedTaskCount) {
       this.#renderedTaskCount = TASK_COUNT_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedTaskCount = Math.min(taskCount, this.#renderedTaskCount);
     }
 
@@ -250,10 +253,6 @@ export default class BoardPresenter {
     this.#renderSort();
     render(this.#taskListComponent, this.#boardComponent.element);
 
-    // Теперь, когда #renderBoard рендерит доску не только на старте,
-    // но и по ходу работы приложения, нужно заменить
-    // константу TASK_COUNT_PER_STEP на свойство #renderedTaskCount,
-    // чтобы в случае перерисовки сохранить N-показанных карточек
     this.#renderTasks(tasks.slice(0, Math.min(taskCount, this.#renderedTaskCount)));
 
     if (taskCount > this.#renderedTaskCount) {
