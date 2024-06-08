@@ -26,7 +26,6 @@ export default class TasksModel extends Observable {
 
   async updateTask(updateType, update) {
     const index = this.#tasks.findIndex((task) => task.id === update.id);
-
     if (index === -1) {
       throw new Error('Can\'t update unexisting task');
     }
