@@ -1,13 +1,21 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import {SortType} from '../const.js';
+import { DISABLED_SORTS, SortType } from '../const';
+import AbstractView from '../framework/view/abstract-view';
+
+function createSortItemsTemplate(type, currentSortType) {
+  return `<div class="trip-sort__item  trip-sort__item--${type}">
+            <input id="sort-${type}" class="trip-sort__input  visually-hidden" data-sort-type="${type}" type="radio" name="trip-sort" value="sort-${type}" ${currentSortType === type ? 'checked' : ''} ${DISABLED_SORTS.includes(type) ? 'disabled' : ''}>
+            <label class="trip-sort__btn" for="sort-${type}">${type}</label>
+          </div>`;
+}
 
 function createSortTemplate(currentSortType) {
+  const sortItems = Object.values(SortType).map((type) =>
+    createSortItemsTemplate(type, currentSortType)).join('');
+
   return (
-    `<div class="board__sort-list">
-    <a href="#" class="board__sort-item ${currentSortType === SortType.DEFAULT ? 'board__sort-item--active' : ''}" data-sort-type="${SortType.DEFAULT}">SORT BY DEFAULT</a>
-    <a href="#" class="board__sort-item ${currentSortType === SortType.DATE_UP ? 'board__sort-item--active' : ''}" data-sort-type="${SortType.DATE_UP}">SORT BY DATE up</a>
-    <a href="#" class="board__sort-item ${currentSortType === SortType.DATE_DOWN ? 'board__sort-item--active' : ''}" data-sort-type="${SortType.DATE_DOWN}">SORT BY DATE down</a>
-    </div>`
+    `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+           ${sortItems}
+    </form>`
   );
 }
 
@@ -15,7 +23,7 @@ export default class SortView extends AbstractView {
   #currentSortType = null;
   #handleSortTypeChange = null;
 
-  constructor({currentSortType, onSortTypeChange}) {
+  constructor({ onSortTypeChange, currentSortType }) {
     super();
     this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
@@ -28,10 +36,9 @@ export default class SortView extends AbstractView {
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'A') {
+    if (evt.target.tagName !== 'INPUT') {
       return;
     }
-
     evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
