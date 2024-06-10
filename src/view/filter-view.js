@@ -23,6 +23,7 @@ function createFilterTemplate(filterItems, currentFilterType) {
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
     .join('');
+
   return (
     `<section class="main__filter filter container">
     ${filterItemsTemplate}

@@ -93,6 +93,23 @@ export default class TaskPresenter {
   }
 
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#taskComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#taskEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#taskEditComponent.shake(resetFormState);
+  }
+
   #replaceCardToForm() {
     replace(this.#taskEditComponent, this.#taskComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -135,8 +152,6 @@ export default class TaskPresenter {
   };
 
   #handleFormSubmit = (update) => {
-    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
-    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
     const isMinorUpdate =
       !isDatesEqual(this.#task.dueDate, update.dueDate) ||
       isTaskRepeating(this.#task.repeating) !== isTaskRepeating(update.repeating);
