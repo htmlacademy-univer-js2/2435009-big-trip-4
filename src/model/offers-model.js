@@ -6,12 +6,12 @@ export default class OffersModel {
     this.#pointApiService = pointApiService;
   }
 
-  async init() {
-    this.#offers = await this.#pointApiService.offers;
+  get offers() {
     return this.#offers;
   }
 
-  get offers() {
+  async init() {
+    this.#offers = await this.#pointApiService.offers;
     return this.#offers;
   }
 

@@ -98,6 +98,10 @@ export default class PointPresenter {
   }
 
   setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
     const resetFormState = () => {
       this.#pointEditComponent.updateElement({
         isDisabled: false,
