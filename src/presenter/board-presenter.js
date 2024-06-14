@@ -56,10 +56,6 @@ export default class BoardPresenter {
     this.#filterModel.addObserver(this.#handleModelPoint);
   }
 
-  init() {
-    this.#renderBoard();
-  }
-
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointModel.points;
@@ -73,6 +69,10 @@ export default class BoardPresenter {
     }
 
     return filteredPoints;
+  }
+
+  init() {
+    this.#renderBoard();
   }
 
   createPoint() {

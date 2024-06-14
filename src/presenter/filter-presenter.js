@@ -18,6 +18,16 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelPoint);
   }
 
+  get filters() {
+    const points = this.#pointModel.points;
+
+    return Object.values(FilterType).map((type) => ({
+      type,
+      name: type.toUpperCase(),
+      count: filters[type](points).length
+    }));
+  }
+
   init() {
     const filter = this.filters;
     const prevFilterComponent = this.#filterComponent;
@@ -35,16 +45,6 @@ export default class FilterPresenter {
 
     replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
-  }
-
-  get filters() {
-    const points = this.#pointModel.points;
-
-    return Object.values(FilterType).map((type) => ({
-      type,
-      name: type.toUpperCase(),
-      count: filters[type](points).length
-    }));
   }
 
   #handleModelPoint = () => {

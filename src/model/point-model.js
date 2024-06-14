@@ -13,6 +13,10 @@ export default class PointModel extends Observable {
     this.#points = [];
   }
 
+  get points() {
+    return this.#points.sort(sortByDay);
+  }
+
   async init() {
     try {
       const points = await this.#pointApiService.points;
@@ -22,10 +26,6 @@ export default class PointModel extends Observable {
     }
 
     this._notify(UpdateType.INIT);
-  }
-
-  get points() {
-    return this.#points.sort(sortByDay);
   }
 
   async updatePoint(updateType, update) {
